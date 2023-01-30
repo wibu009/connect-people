@@ -14,6 +14,11 @@ namespace API.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
+            // AddIdentityCore is used to add Identity to our application
+            // We do not want to use the default identity, we want to use our own
+            // AppUser class instead of the IdentityUser class
+            // We want to use the DataContext class instead of the default ApplicationDbContext
+            // class
             services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireNonAlphanumeric = false;
@@ -21,6 +26,11 @@ namespace API.Extensions
             })
             .AddEntityFrameworkStores<DataContext>();
 
+            // AddAuthentication is used to add authentication to our application
+            // We are using JWT to authenticate our users
+            // We need to provide a token validation parameters object that contains
+            // information about how we want our authentication to work, e.g. do we want to
+            // validate the issuer, audience, lifetime, etc.
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -34,6 +44,10 @@ namespace API.Extensions
                     };
                 });
             
+            // AddAuthorization is used to add authorization to our application
+            // We are using policies to authorize our users
+            // We need to provide a policy, which is a collection of requirements
+            // We also need to provide a handler that will handle the requirements
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("IsActivityHost", policy =>
