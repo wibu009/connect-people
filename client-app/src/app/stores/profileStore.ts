@@ -15,7 +15,7 @@ export default class ProfileStore {
     }
 
     get isCurrentUser() {
-        if (store.userStore.user && this.profile){
+        if (store.userStore.user && this.profile) {
             return store.userStore.user.username === this.profile.username;
         }
         return false;
@@ -97,6 +97,25 @@ export default class ProfileStore {
             })
         }
         catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
+        }
+    }
+
+    updateProfile = async (profile: Partial<Profile>) => {
+        this.loading = true;
+        try {
+            await agent.Profiles.updateProfile(profile);
+            runInAction(() => {
+                if (profile.displayName && profile.displayName !==
+                    store.userStore.user?.displayName) {
+                    store.userStore.setDisplayName(profile.displayName);
+                }
+                this.profile = { ...this.profile, ...profile as Profile };
+                this.loading = false;
+                toast.success('Profile updated', { theme: 'light' });
+            })
+        } catch (error) {
             console.log(error);
             runInAction(() => this.loading = false);
         }
