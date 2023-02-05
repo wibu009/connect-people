@@ -5,6 +5,7 @@ export interface Profile {
     username: string;
     bio?: string;
     image?: string;
+    photos? : Photo[];
 }
 
 export class Profile implements Profile {
@@ -13,4 +14,10 @@ export class Profile implements Profile {
         this.username = user.username;
         this.image = user.image;
     }
+}
+
+export interface Photo {
+    id: string;
+    url: string;
+    isMain: boolean;
 }
