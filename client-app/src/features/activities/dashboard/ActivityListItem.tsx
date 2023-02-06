@@ -10,6 +10,12 @@ interface Props {
 }
 
 export default function ActivityListItem({ activity }: Props) {
+    function truncate(str: string | undefined) {
+        if (str) {
+            return str.length > 100 ? str.substring(0, 90) + '...' : str;
+        }
+    }
+
     return (
         <Segment.Group>
             <Segment>
@@ -46,7 +52,7 @@ export default function ActivityListItem({ activity }: Props) {
                 <ActivityListItemAttendee attendees={activity.attendees!} />
             </Segment>
             <Segment clearing>
-                <span>{activity.description}</span>
+                <span>{truncate(activity.description)}</span>
                 <Button
                     as={Link}
                     to={`/activities/${activity.id}`}
