@@ -12,7 +12,7 @@ export default observer(function RegisterForm() {
     return (
         <Formik
             initialValues={{ displayName: '', email: '', password: '', error: null }}
-            onSubmit={(values, { setErrors }) => userStore.register(values).catch(error => setErrors({error}))}
+            onSubmit={(values, { setErrors }) => userStore.register(values).catch(error => setErrors({ error }))}
             validationSchema={Yup.object({
                 displayName: Yup.string().required(),
                 username: Yup.string().required(),
@@ -23,21 +23,21 @@ export default observer(function RegisterForm() {
             {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
                 <Form className='ui form error' onSubmit={handleSubmit} autoComplete='off' >
                     <Header as='h2' color='teal'>
-                        <Image src='/assets/logo_teal.png' />Sign Up to Reactivities
+                        <Image src='/assets/logo_teal.png' /> Join the Community
                     </Header>
                     <MyTextInput fluid icon='info' iconPosition='left' placeholder="Display Name" name='displayName' />
                     <MyTextInput fluid icon='user' iconPosition='left' placeholder="Username" name='username' />
                     <MyTextInput fluid icon='envelope' iconPosition='left' placeholder="Email" name='email' />
                     <MyTextInput fluid icon='lock' iconPosition='left' placeholder="Password" name='password' type="password" />
-                    <ErrorMessage name="error" render={() => 
-                    <ValidationError errors={errors.error}/>
+                    <ErrorMessage name="error" render={() =>
+                        <ValidationError errors={errors.error} />
                     } />
                     <Button
                         disabled={!isValid || !dirty || isSubmitting}
                         loading={isSubmitting}
                         positive content='Register'
-                        type='submit' fluid 
-                        />
+                        type='submit' fluid
+                    />
                 </Form>
             )}
         </Formik>

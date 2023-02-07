@@ -19,7 +19,7 @@ namespace API.Extensions
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(opt =>
             {
-                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Reactivities API", Version = "v1" });
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "ConnectPeople API", Version = "v1" });
                 opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
