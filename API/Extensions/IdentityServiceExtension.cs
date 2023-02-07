@@ -4,7 +4,6 @@ using Domain;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
@@ -42,8 +41,21 @@ namespace API.Extensions
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
-            
+
             // AddAuthorization is used to add authorization to our application
             // We are using policies to authorize our users
             // We need to provide a policy, which is a collection of requirements
