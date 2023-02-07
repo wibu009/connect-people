@@ -1,4 +1,4 @@
-# College Graduate Project in Software Development
+# College Graduate Project (Specialized: Software Development)
 ## Overview
 This project is a college graduate project in software development, focused on building a social networking site. The goal of the project is to create a platform for people to connect, create activities, and manage attendees and profiles.
 
