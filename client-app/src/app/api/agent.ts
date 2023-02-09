@@ -14,7 +14,7 @@ const sleep = (delay: number) => {
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
-const responseBody = <T> (response: AxiosResponse<T>) => response.data;
+const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 // Define an interceptor that will be called before all outgoing requests.
 axios.interceptors.request.use(config => {
@@ -39,18 +39,18 @@ axios.interceptors.response.use(async response => {
     switch (status) {
         case 400:
             // If the method is get and there is an id error
-            if(config.method === 'get' && data.errors.hasOwnProperty('id')) {
+            if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
                 // Navigate to not found
                 router.navigate('/not-found');
             }
             // If there are errors
-            if(data.errors) {
+            if (data.errors) {
                 // Create an array to store the errors
                 const modalStateErrors = [];
                 // Loop over the errors
-                for(const key in data.errors) {
+                for (const key in data.errors) {
                     // If there is a key
-                    if(data.errors[key]) {
+                    if (data.errors[key]) {
                         // Add the error to the array
                         modalStateErrors.push(data.errors[key]);
                     }
@@ -64,7 +64,7 @@ axios.interceptors.response.use(async response => {
             break;
         // Repeat for each status
         case 401:
-            toast.error('Unauthorized', {theme: 'light'});
+            toast.error('Unauthorized', { theme: 'light' });
             break;
         case 403:
             toast.error('Forbidden');
@@ -82,10 +82,10 @@ axios.interceptors.response.use(async response => {
 })
 
 const requests = {
-    get: <T> (url: string) => axios.get<T>(url).then(responseBody),
-    post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
-    put: <T> (url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
-    del: <T> (url: string) => axios.delete<T>(url).then(responseBody),
+    get: <T>(url: string) => axios.get<T>(url).then(responseBody),
+    post: <T>(url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
+    put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+    del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 }
 
 const Activities = {
@@ -115,7 +115,9 @@ const Profiles = {
     },
     setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
     deletePhoto: (id: string) => requests.del(`/photos/${id}`),
-    updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile)
+    updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile),
+    updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
+    listFollowings: (username: string, predicate: string) => requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`),
 }
 
 const agent = {

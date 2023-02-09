@@ -9,7 +9,7 @@ namespace API.Services
     public class TokenService
     {
         private readonly IConfiguration _config;
-        
+
         public TokenService(IConfiguration config)
         {
             _config = config;
@@ -34,7 +34,7 @@ namespace API.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = creds
             };
 

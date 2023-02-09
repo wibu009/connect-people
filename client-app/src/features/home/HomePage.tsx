@@ -12,18 +12,19 @@ export default observer(function HomePage() {
         <Segment inverted textAlign='center' vertical className='masthead'>
             <Container text>
                 <Header as='h1' inverted>
-                    <Image size='massive' src='/assets/logo.png' alt='logo' style={{ marginBottom: 12 }} />
+                    <Image size='massive' src='/assets/logo.png' alt='logo' style={{ marginBottom: 8 }} />
                     Connect People
                 </Header>
                 {userStore.isLoggedIn ? (
                     <>
-                        <Header as='h2' inverted content="Welcome to Connect People - Connect with the World" />
+                        <Header as='h2' inverted content={`Welcome back ${userStore.user?.displayName}`} />
                         <Button as={Link} to='/activities' size="huge" inverted>
                             Go to activities!
                         </Button>
                     </>
                 ) : (
                     <>
+                        <Header as='h2' inverted content="Welcome to Connect People - Connect with the World" />
                         <Button onClick={() => modalStore.openModal(<LoginForm />)} size="huge" inverted>
                             Login
                         </Button>

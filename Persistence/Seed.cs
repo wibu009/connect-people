@@ -28,8 +28,8 @@ namespace Persistence
                     },
                     new AppUser
                     {
-                        DisplayName = "Jack",
-                        UserName = "jack",
+                        DisplayName = "Tom",
+                        UserName = "tom",
                         Email = "tom@test.com",
                         Bio = "I like to go on long walks in the park."
                     },
