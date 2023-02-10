@@ -29,3 +29,12 @@ export const StoreContext = createContext(store);
 export function useStore() {
     return useContext(StoreContext);
 }
+
+export function refreshStore() {
+    store.activityStore = new ActivityStore();
+    store.commonStore = new CommonStore();
+    store.userStore = new UserStore();
+    store.modalStore = new ModalStore();
+    store.profileStore = new ProfileStore();
+    store.commentStore = new CommentStore();
+}

@@ -8,11 +8,11 @@ export interface Profile {
     followingCount: number;
     following: boolean;
     image?: string;
-    photos? : Photo[];
+    photos?: Photo[];
 }
 
 export class Profile implements Profile {
-    constructor(user: User){
+    constructor(user: User) {
         this.displayName = user.displayName;
         this.username = user.username;
         this.image = user.image;
@@ -23,4 +23,11 @@ export interface Photo {
     id: string;
     url: string;
     isMain: boolean;
+}
+
+export interface UserActivity {
+    id: string;
+    title: string;
+    category: string;
+    date: Date;
 }

@@ -1,5 +1,5 @@
 import { router } from './../router/Routes';
-import { store } from './store';
+import { refreshStore, store } from './store';
 import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { User, UserFormValues } from './../models/user';
@@ -40,6 +40,7 @@ export default class UserStore {
     }
 
     logout = () => {
+        refreshStore();
         store.commonStore.setToken(null);
         this.user = null;
         router.navigate('/');
