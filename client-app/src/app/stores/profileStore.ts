@@ -94,6 +94,8 @@ export default class ProfileStore {
                     this.profile.photos.find(a => a.id === photo.id)!.isMain = true;
                     this.profile.image = photo.url;
                     this.loading = false;
+                    store.activityStore.activityRegistry.clear();
+                    store.activityStore.loadActivities();
                     toast.success('Photo set as main', {
                         theme: 'light'
                     });
@@ -135,6 +137,8 @@ export default class ProfileStore {
                 }
                 this.profile = { ...this.profile, ...profile as Profile };
                 this.loading = false;
+                store.activityStore.activityRegistry.clear();
+                store.activityStore.loadActivities();
                 toast.success('Profile updated', { theme: 'light' });
             })
         } catch (error) {

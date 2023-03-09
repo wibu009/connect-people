@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import React, { Fragment } from 'react';
 import { Header } from 'semantic-ui-react';
@@ -12,7 +13,7 @@ export default observer(function ActivityList() {
         <>
             {groupedActivities.map(([group, activities]) => (
                 <Fragment key={group}>
-                    <Header sub color='teal'>{group}</Header>
+                    <Header sub color='teal'> Activities will be {formatDistanceToNow(new Date(group))} </Header>
                     {activities.map(activity => (
                         <ActivityListItem key={activity.id} activity={activity} />
                     ))}

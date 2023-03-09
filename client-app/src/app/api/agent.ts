@@ -13,7 +13,7 @@ const sleep = (delay: number) => {
     })
 }
 
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -29,8 +29,7 @@ axios.interceptors.request.use(config => {
 
 // Add a response interceptor
 axios.interceptors.response.use(async response => {
-    // Sleep for 1 second
-    await sleep(1000);
+    if (process.env.NODE_ENV === 'development') await sleep(1000);
     // Get the pagination header
     const pagination = response.headers['pagination'];
     // If the pagination header exists
