@@ -1,9 +1,9 @@
-# fly.toml file generated for connect-people on 2023-03-12T22:51:13+07:00
+# fly.toml file generated for connect-people on 2023-03-14T01:17:03+07:00
 
 app = "connect-people"
 kill_signal = "SIGINT"
 kill_timeout = 5
-primary_region = "hkg"
+primary_region = "sin"
 processes = []
 
 [build]
