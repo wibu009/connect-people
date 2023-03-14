@@ -44,15 +44,14 @@ namespace API.Extensions
                 });
             });
 
-            services.AddDbContext<DataContext>(opt =>
+            services.AddDbContext<DataContext>(options =>
             {
-                //opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
                 string connStr;
 
-                //Depending on if in development or production, use either FlyIO
-                //connection string, or development connection string from env var.
+                // Depending on if in development or production, use either FlyIO
+                // connection string, or development connection string from env var.
                 if (env == "Development")
                 {
                     // Use connection string from file.
@@ -79,7 +78,7 @@ namespace API.Extensions
 
                 // Whether the connection string came from the local development configuration file
                 // or from the environment variable from FlyIO, use it to set up your DbContext.
-                opt.UseNpgsql(connStr);
+                options.UseNpgsql(connStr);
             });
 
             services.AddCors(opt =>

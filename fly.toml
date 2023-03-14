@@ -1,4 +1,4 @@
-# fly.toml file generated for connect-people on 2023-03-14T01:17:03+07:00
+# fly.toml file generated for connect-people on 2023-03-14T23:31:29+07:00
 
 app = "connect-people"
 kill_signal = "SIGINT"
@@ -10,9 +10,9 @@ processes = []
   image = "wibu009/connect_people:latest"
 
 [env]
-  ASPNETCORE_URLS="http://+:8080"
-  Cloudinary__CloudName="wibu009"
-  Cloudinary__ApiKey="831276283983712"
+  ASPNETCORE_URLS = "http://+:8080"
+  Cloudinary__CloudName = "wibu009"
+  Cloudinary__ApiKey = "831276283983712"
 
 [experimental]
   auto_rollback = true
