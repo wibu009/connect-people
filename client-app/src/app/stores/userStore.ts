@@ -6,6 +6,7 @@ import { User, UserFormValues } from './../models/user';
 
 export default class UserStore {
     user: User | null = null
+    fbLoading = false;
 
     constructor() {
         makeAutoObservable(this)
@@ -61,5 +62,21 @@ export default class UserStore {
 
     setDisplayName = (displayName: string) => {
         if (this.user) this.user.displayName = displayName;
+    }
+
+    facebookLogin = async (accessToken: string) => {
+        this.fbLoading = true;
+        try {
+            const user = await agent.Account.fbLogin(accessToken);
+            store.commonStore.setToken(user.token);
+            runInAction(() => {
+                this.user = user;
+                this.fbLoading = false;
+            });
+            router.navigate('/activities');
+        } catch (error) {
+            runInAction(() => this.fbLoading = false);
+            console.log(error);
+        }
     }
 }

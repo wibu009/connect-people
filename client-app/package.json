@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@greatsumini/react-facebook-login": "^3.3.3",
         "@microsoft/signalr": "^7.0.2",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
@@ -38,7 +39,7 @@
         "yup": "^0.32.11"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "set HTTPS=true&& set SSL_CRT_FILE=./cert/cert.pem&& set SSL_KEY_FILE=./cert/key.pem&& react-scripts start",
         "build": "set BUILD_PATH=../API/wwwroot&& react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

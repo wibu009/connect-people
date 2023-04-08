@@ -74,7 +74,13 @@ namespace API.Extensions
                     var pgPort = pgHostPort.Split(":")[1];
 
                     connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+
+                    if(string.IsNullOrEmpty(connStr))
+                        connStr = config.GetConnectionString("DefaultConnection");
                 }
+
+                if (string.IsNullOrEmpty(connStr))
+                    throw new Exception("Connection string is null or empty");
 
                 // Whether the connection string came from the local development configuration file
                 // or from the environment variable from FlyIO, use it to set up your DbContext.
@@ -85,7 +91,7 @@ namespace API.Extensions
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithOrigins("http://localhost:3000");
+                    policy.AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithOrigins("http://localhost:3000", "https://localhost:3000");
                 });
             });
 
