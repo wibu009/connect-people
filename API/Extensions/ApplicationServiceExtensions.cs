@@ -74,7 +74,7 @@ namespace API.Extensions
                     var pgPort = pgHostPort.Split(":")[1];
                     var updatedHost = pgHost.Replace("flycast", "internal");
 
-                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+                    connStr = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 
                     if(string.IsNullOrEmpty(connStr))
                         connStr = config.GetConnectionString("DefaultConnection");
