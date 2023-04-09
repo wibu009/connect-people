@@ -9,6 +9,7 @@ import ProfilePage from "../../features/profiles/ProfilePage";
 import LoginForm from "../../features/users/LoginForm";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
+import ActivityCalendar from "../../features/activities/dashboard/ActivityCalendar";
 
 export const routes: RouteObject[] = [
     {
@@ -18,6 +19,7 @@ export const routes: RouteObject[] = [
             {
                 element: <RequireAuth />, children: [
                     { path: "/activities", element: <ActivityDashboard /> },
+                    { path: "/activities-calendar", element: <ActivityCalendar /> },
                     { path: "/activities/:id", element: <ActivityDetails /> },
                     { path: "createActivity", element: <ActivityForm key='create' /> },
                     { path: "/manage/:id", element: <ActivityForm key='manage' /> },
