@@ -21,7 +21,7 @@ export default observer(function ActivityCalendar() {
         end: moment(activity.date).add(2, 'hours').toDate(),
     }));
 
-    const [setSelectedEvent] = useState<any>(null);
+    const [ selectedEvent, setSelectedEvent ] = useState(events[0]);
 
     const navigate = useNavigate();
 
