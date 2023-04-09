@@ -13,6 +13,7 @@ interface Store {
     modalStore: ModalStore,
     profileStore: ProfileStore
     commentStore: CommentStore
+    resetStore(): void;
 }
 
 export const store: Store = {
@@ -21,7 +22,16 @@ export const store: Store = {
     userStore: new UserStore(),
     modalStore: new ModalStore(),
     profileStore: new ProfileStore(),
-    commentStore: new CommentStore()
+    commentStore: new CommentStore(),
+    resetStore(): void {
+        store.activityStore.activityRegistry.clear();
+        store.commonStore.setToken(null);
+        store.modalStore.closeModal();
+        store.userStore.user = null;
+        store.profileStore.profile = null;
+        store.commentStore.clearComments();
+
+    }
 }
 
 export const StoreContext = createContext(store);

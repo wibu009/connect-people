@@ -19,7 +19,7 @@ export default observer(function LoginForm() {
         >
             {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
                 <Form className='ui form' onSubmit={handleSubmit} autoComplete='off' >
-                    <Header as='h2' color='teal' fluid >
+                    <Header as='h2' color='teal' fluid='true' >
                         <Image src='/assets/logo_teal.png' /> Connect People Now
                     </Header>
                     <MyTextInput fluid icon='user' iconPosition='left' placeholder="Email" name='email' />
