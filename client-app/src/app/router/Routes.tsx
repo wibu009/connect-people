@@ -10,6 +10,8 @@ import LoginForm from "../../features/users/LoginForm";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
 import ActivityCalendar from "../../features/activities/dashboard/ActivityCalendar";
+import RegisterSuccess from "../../features/users/RegisterSuccess";
+import ConfirmEmail from "../../features/users/ConfirmEmail";
 
 export const routes: RouteObject[] = [
     {
@@ -30,6 +32,8 @@ export const routes: RouteObject[] = [
             { path: "/login", element: <LoginForm /> },
             { path: "/not-found", element: <NotFound /> },
             { path: "/server-error", element: <ServerError /> },
+            { path: "/account/registerSuccess", element: <RegisterSuccess />},
+            { path: "/account/verifyEmail", element: <ConfirmEmail /> },
             { path: "*", element: <Navigate replace to="/not-found" /> }
         ]
     }

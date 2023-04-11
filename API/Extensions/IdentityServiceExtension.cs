@@ -4,6 +4,7 @@ using Domain;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
@@ -22,8 +23,11 @@ namespace API.Extensions
             {
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.User.RequireUniqueEmail = true;
+                opt.SignIn.RequireConfirmedEmail = true;
             })
-            .AddEntityFrameworkStores<DataContext>();
+            .AddEntityFrameworkStores<DataContext>()
+            .AddSignInManager<SignInManager<AppUser>>()
+            .AddDefaultTokenProviders();
 
             // AddAuthentication is used to add authentication to our application
             // We are using JWT to authenticate our users

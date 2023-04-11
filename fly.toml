@@ -14,6 +14,7 @@ processes = []
   Cloudinary__CloudName = "wibu009"
   Cloudinary__ApiKey = "831276283983712"
   Facebook__AppId = "120699144314450"
+  SendGrid__User = "Connect People Events"
 
 [experimental]
   auto_rollback = true
