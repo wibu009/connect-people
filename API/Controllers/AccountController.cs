@@ -142,6 +142,45 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("sendForgotPasswordEmail")]
+        public async Task<ActionResult> SendForgotPasswordEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null) return Unauthorized();
+
+            var origin = Request.Headers["origin"];
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var resetPasswordUrl = $"{origin}/account/resetPassword?token={token}&email={user.Email}";
+
+            var message = $@"<p>Please click the below link to reset your password:</p>
+                <p><a href='{resetPasswordUrl}'>Click here to reset your password</a></p>";
+
+            await _emailSender.SendEmailAsync(user.Email, "Reset your password", message);
+
+            return Ok("Reset password email sent - Please check your email to reset your password");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("resetPassword")]
+        public async Task<ActionResult> ResetPassword(ResetPassDto resetPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+
+            if (user == null) return Unauthorized();
+
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(resetPasswordDto.Token);
+            var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.Password);
+
+            if (!result.Succeeded) return BadRequest("Could not reset password");
+
+            return Ok("Password reset successful");
+        }
+
+        [AllowAnonymous]
         [HttpPost("fbLogin")]
         public async Task<ActionResult<UserDto>> FacebookLogin(string accessToken)
         {
