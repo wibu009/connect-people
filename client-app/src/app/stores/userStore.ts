@@ -102,6 +102,7 @@ export default class UserStore {
                 this.fbLoading = false;
             });
             router.navigate('/activities');
+            store.modalStore.closeModal();
         } catch (error) {
             runInAction(() => this.fbLoading = false);
             console.log(error);
