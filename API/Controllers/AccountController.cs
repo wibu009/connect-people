@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 
 namespace API.Controllers
 {
@@ -47,7 +46,7 @@ namespace API.Controllers
                 .Include(p => p.Photos)
                 .SingleOrDefaultAsync(x => x.Email == loginDto.Email);
 
-            if (user == null) return Unauthorized("Email or password is invalid");
+            if (user == null) return Unauthorized("Email or password is incorrect");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
@@ -59,7 +58,7 @@ namespace API.Controllers
                 return CreateUserObject(user);
             }
 
-            return Unauthorized("Email or password is invalid");
+            return Unauthorized("Email or password is incorrect");
         }
 
         [AllowAnonymous]
@@ -150,9 +149,9 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null) return Unauthorized();
+            if (user == null) return Unauthorized("Account does not exist");
 
-            if (!user.EmailConfirmed) return Unauthorized("Email not confirmed");
+            if (!user.EmailConfirmed) return Unauthorized("Account not verified");
 
             var origin = Request.Headers["origin"];
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -176,8 +175,6 @@ namespace API.Controllers
             if (user == null) return Unauthorized();
 
             if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword) return BadRequest("Passwords do not match");
-
-            if(_userManager.CheckPasswordAsync(user, resetPasswordDto.NewPassword).Result) return BadRequest("New password cannot be the same as old password");
 
             var decodedTokenBytes = WebEncoders.Base64UrlDecode(resetPasswordDto.Token);
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
@@ -260,6 +257,27 @@ namespace API.Controllers
             if (oldRefreshToken != null) oldRefreshToken.Revoked = DateTime.UtcNow;
 
             return CreateUserObject(user);
+        }
+
+        [Authorize]
+        [HttpPost("changePassword")]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userManager.FindByNameAsync(User.FindFirstValue(ClaimTypes.Name)!);
+
+            if (user == null) return Unauthorized();
+
+            if (!await _userManager.CheckPasswordAsync(user, changePasswordDto.CurrentPassword)) return Unauthorized("Incorrect current password");
+
+            if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword) return BadRequest("Passwords do not match");
+
+            if (await _userManager.CheckPasswordAsync(user, changePasswordDto.NewPassword)) return BadRequest("New password cannot be the same as old password");
+
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+
+            if (!result.Succeeded) return BadRequest("Could not change password");
+
+            return Ok("Password changed successfully");
         }
 
         [Authorize]

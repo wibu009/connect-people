@@ -3,6 +3,8 @@ import { store } from './store';
 import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { User, UserFormValues } from './../models/user';
+import { ChangePasswordFormValues } from '../models/changePassword';
+import { toast } from 'react-toastify';
 
 export default class UserStore {
     user: User | null = null
@@ -36,25 +38,29 @@ export default class UserStore {
             router.navigate('/account/registerSuccess?email=' + creds.email);
             store.modalStore.closeModal();
         } catch (error: any) {
-            if(error?.response?.status === 400) {
+            if(error.response !== null) {
                 throw error;
             }
             store.modalStore.closeModal();
-            console.log(500);
         }
     }
 
     forgotPassword = async (email: string) => {
+        await agent.Account.sendEmailResetPassword(email).then(() => {
+            router.navigate('/account/forgotPasswordSuccess?email=' + email);
+            store.modalStore.closeModal();
+        }).catch((error) => {
+            throw error;
+        });
+    }
+
+    changePassword = async (creds: ChangePasswordFormValues) => {
         try {
-            await agent.Account.sendEmailResetPassword(email);
-            router.navigate('/account/forgotPassword?email=' + email);
-            store.modalStore.closeModal();
+            await agent.Account.changePassword(creds);
+            toast.success("Password changed successfully", { autoClose: 2000, theme: "light" });
+            router.navigate('/activities');
         } catch (error: any) {
-            if(error?.response?.status === 400) {
-                throw error;
-            }
-            store.modalStore.closeModal();
-            console.log(500);
+            throw error;
         }
     }
 

@@ -18,7 +18,7 @@ export default observer(function NavBar() {
                     <>
                         <Menu.Item as={NavLink} to='/activities' name="Activities" />
                         {/* <Menu.Item as={NavLink} to='/errors' name="Errors" /> */}
-                        <Menu.Item as={NavLink} to='/activities-calendar' name="Activities Calendar" />
+                        <Menu.Item as={NavLink} to='/activitiesCalendar' name="Activities Calendar" />
                         <Menu.Item>
                             <Button as={NavLink} to='/createActivity' positive content="Create Activity" />
                         </Menu.Item>
@@ -27,6 +27,7 @@ export default observer(function NavBar() {
                             <Dropdown pointing="top left" text={user?.displayName}>
                                 <Dropdown.Menu>
                                     <Dropdown.Item as={Link} to={`/profiles/${user?.username}`} text='My Profile' icon='user' />
+                                    <Dropdown.Item as={Link} to='/account/changePassword' text='Change Password' icon='setting' />
                                     <Dropdown.Item onClick={logout} text='Logout' icon='power' />
                                 </Dropdown.Menu>
                             </Dropdown>

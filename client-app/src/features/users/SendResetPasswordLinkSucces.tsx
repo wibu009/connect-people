@@ -17,8 +17,8 @@ export default function SendResetPasswordLinkSuccess() {
 
     return (
         <Segment placeholder textAlign='center'>
-            <Header icon color='green'>
-                <Icon name="check" />
+            <Header icon color='teal'>
+                <Icon name="mail outline" />
                 Check Your Email!
             </Header>
             <p>Please check your email (including spam folder) for instructions to reset your password.</p>

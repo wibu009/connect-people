@@ -17,7 +17,7 @@ export default function RegisterSuccess() {
 
     return (
         <Segment placeholder textAlign='center'>
-            <Header icon color='green'>
+            <Header icon color='green' style={{ marginBottom: 20 }}>
                 <Icon name="check" />
                 Successfully registered!
             </Header>

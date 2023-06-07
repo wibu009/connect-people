@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import useQuery from "../../app/util/hook";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
@@ -12,8 +12,6 @@ export default function ResetPassword() {
     const email = useQuery().get("email") as string;
     const token = useQuery().get("token") as string;
 
-    const [, setSubmitting] = useState(false);
-
     useEffect(() => {
         if (!email || !token) {
             toast.error("Invalid reset password link", { autoClose: 2000, theme: "light" });
@@ -25,14 +23,15 @@ export default function ResetPassword() {
         <Segment clearing size='massive' style={{ maxWidth: 500, margin: 'auto' }}>
             <Formik
                 initialValues={{ newPassword: '', confirmPassword: '', error: null }}
-                onSubmit={(values, { setErrors }) => {
+                onSubmit={(values, { setErrors, setSubmitting }) => {
                     setSubmitting(true);
                     agent.Account.resetPassword({ email, token, newPassword: values.newPassword, confirmPassword: values.confirmPassword })
                         .then(() => {
                             toast.success("Password reset successfully", { autoClose: 2000, theme: "light" });
                             setSubmitting(false);
-                            new Promise<void>((resolve) => setTimeout(() => resolve(), 2000)).then(() => router.navigate("/login"));
-                        }).catch((error) => setErrors({ error: error.response.data })).finally(() => setSubmitting(false));
+                            new Promise<void>((resolve) => setTimeout(() => resolve(), 2000)).then(() => router.navigate("/"));
+                        }).catch((error) => setErrors({ error: error.response.data })).finally(() => setSubmitting(false))
+                        .finally(() => setSubmitting(false));
                 }}
                 validationSchema={Yup.object({
                     newPassword: Yup.string().required().min(6),
@@ -42,7 +41,7 @@ export default function ResetPassword() {
                 {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
                     <Form className='ui form error' onSubmit={handleSubmit}>
                         <Header as='h2' color='teal' style={{ textAlign: 'center', marginBottom: 20 }}>
-                            <Image src='https://cdn-icons-png.flaticon.com/512/1570/1570240.png' /> Reset Password
+                            <Image src='https://cdn-icons-png.flaticon.com/512/1570/1570240.png' /> Set a new password
                         </Header>
                         <MyTextInput fluid icon='lock' iconPosition='left' placeholder="New Password" name='newPassword' type="password" />
                         <MyTextInput fluid icon='lock' iconPosition='left' placeholder="Confirm Password" name='confirmPassword' type="password" />
@@ -52,7 +51,8 @@ export default function ResetPassword() {
                         <Button
                             disabled={!isValid || !dirty || isSubmitting}
                             loading={isSubmitting}
-                            positive content='Reset Password'
+                            positive
+                            content='Confirm'
                             type='submit' fluid
                         />
                     </Form>

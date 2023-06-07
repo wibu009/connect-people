@@ -7,6 +7,7 @@ import { router } from '../router/Routes';
 import { store } from '../stores/store';
 import { PaginatedResult } from '../models/pagination';
 import { ResetPasswordFormValues } from '../models/passwordReset';
+import { ChangePasswordFormValues } from '../models/changePassword';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -116,6 +117,7 @@ const Account = {
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
     fbLogin: (accessToken: string) => requests.post<User>(`/account/fblogin?accessToken=${accessToken}`, {}),
     refreshToken: () => requests.post<User>('/account/refreshToken', {}),
+    changePassword: (passwordFormValues: ChangePasswordFormValues) => requests.post<void>('/account/changePassword', passwordFormValues),
     verifyEmail: (token: string, email: string) => requests.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
     resendEmailConfirmation: (email: string) => requests.get<void>(`/account/resendEmailConfirmationLink?email=${email}`),
     sendEmailResetPassword: (email: string) => requests.get<void>(`/account/sendEmailResetPasswordLink?email=${email}`),
