@@ -1,5 +1,6 @@
 export interface ResetPasswordFormValues {
     email: string;
     token: string;
-    password: string;
+    newPassword: string;
+    confirmPassword: string;
 }

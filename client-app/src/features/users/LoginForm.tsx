@@ -29,7 +29,7 @@ export default observer(function LoginForm() {
                     <ErrorMessage name="error" render={() => <Label style={{ marginBottom: 10, border: 'none' }} basic color='red' content={errors.error} />} />
                     <Button disabled={!isValid || !dirty || isSubmitting} loading={isSubmitting} positive content='Login' type='submit' fluid ></Button>
                     <Label as='a' style={{ marginTop: 10, marginBottom: 0, display: 'flex', justifyContent: 'center', border: 'none', fontSize: 14 }} basic color='teal' content='Forgot Password?' onClick={() => modalStore.openModal(<SendResetPasswordLinkForm />)} />
-                    <Divider horizontal>Or</Divider>
+                    <Divider horizontal style={{color: 'teal'}} >Or</Divider>
                     <Button
                         as={FacebookLogin}
                         appId='120699144314450'

@@ -175,9 +175,13 @@ namespace API.Controllers
 
             if (user == null) return Unauthorized();
 
+            if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword) return BadRequest("Passwords do not match");
+
+            if(_userManager.CheckPasswordAsync(user, resetPasswordDto.NewPassword).Result) return BadRequest("New password cannot be the same as old password");
+
             var decodedTokenBytes = WebEncoders.Base64UrlDecode(resetPasswordDto.Token);
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
-            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.Password);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.NewPassword);
 
             if (!result.Succeeded) return BadRequest("Could not reset password");
 

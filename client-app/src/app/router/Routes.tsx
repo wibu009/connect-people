@@ -13,6 +13,7 @@ import ActivityCalendar from "../../features/activities/dashboard/ActivityCalend
 import RegisterSuccess from "../../features/users/RegisterSuccess";
 import ConfirmEmail from "../../features/users/ConfirmEmail";
 import SendResetPasswordLinkSuccess from "../../features/users/SendResetPasswordLinkSucces";
+import ResetPassword from "../../features/users/ResetPassword";
 
 export const routes: RouteObject[] = [
     {
@@ -35,6 +36,7 @@ export const routes: RouteObject[] = [
             { path: "/server-error", element: <ServerError /> },
             { path: "/account/registerSuccess", element: <RegisterSuccess />},
             { path: "/account/forgotPassword", element: <SendResetPasswordLinkSuccess /> },
+            { path: "/account/resetPassword", element: <ResetPassword />},
             { path: "/account/verifyEmail", element: <ConfirmEmail /> },
             { path: "*", element: <Navigate replace to="/not-found" /> }
         ]
