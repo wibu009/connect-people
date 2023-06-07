@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace API.Controllers
 {
@@ -46,19 +47,19 @@ namespace API.Controllers
                 .Include(p => p.Photos)
                 .SingleOrDefaultAsync(x => x.Email == loginDto.Email);
 
-            if (user == null) return Unauthorized("Invalid email");
-
-            if (!user.EmailConfirmed) return Unauthorized("Email not confirmed");
+            if (user == null) return Unauthorized("Email or password is invalid");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (result.Succeeded)
             {
+                if(!user.EmailConfirmed) return Unauthorized("Email not confirmed");
+
                 await SetRefreshToken(user);
                 return CreateUserObject(user);
             }
 
-            return Unauthorized("Invalid password");
+            return Unauthorized("Email or password is invalid");
         }
 
         [AllowAnonymous]
@@ -94,8 +95,7 @@ namespace API.Controllers
 
             var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
 
-            var message = $@"<p>Please click the below link to verify your email address:</p>
-                <p><a href='{verifyUrl}'>Click here to verify email</a></p>";
+            var message = EmailTemplate.ConfirmEmail(verifyUrl);
 
             await _emailSender.SendEmailAsync(user.Email, "Please verify your email", message);
 
@@ -109,6 +109,8 @@ namespace API.Controllers
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null) return Unauthorized();
+
+            if (user.EmailConfirmed) return BadRequest("Email already confirmed");
 
             var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
@@ -127,14 +129,15 @@ namespace API.Controllers
 
             if (user == null) return Unauthorized();
 
+            if (user.EmailConfirmed) return Ok("Email already confirmed");
+
             var origin = Request.Headers["origin"];
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
             var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
 
-            var message = $@"<p>Please click the below link to verify your email address:</p>
-                <p><a href='{verifyUrl}'>Click here to verify email</a></p>";
+            var message = EmailTemplate.ConfirmEmail(verifyUrl);
 
             await _emailSender.SendEmailAsync(user.Email, "Please verify your email", message);
 
@@ -142,12 +145,14 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("sendForgotPasswordEmail")]
-        public async Task<ActionResult> SendForgotPasswordEmail(string email)
+        [HttpGet("sendEmailResetPasswordLink")]
+        public async Task<ActionResult> SendEmailResetPasswordLink([FromQuery] string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null) return Unauthorized();
+
+            if (!user.EmailConfirmed) return Unauthorized("Email not confirmed");
 
             var origin = Request.Headers["origin"];
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -155,8 +160,7 @@ namespace API.Controllers
 
             var resetPasswordUrl = $"{origin}/account/resetPassword?token={token}&email={user.Email}";
 
-            var message = $@"<p>Please click the below link to reset your password:</p>
-                <p><a href='{resetPasswordUrl}'>Click here to reset your password</a></p>";
+            var message = EmailTemplate.ResetPassword(resetPasswordUrl);
 
             await _emailSender.SendEmailAsync(user.Email, "Reset your password", message);
 
@@ -165,7 +169,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost("resetPassword")]
-        public async Task<ActionResult> ResetPassword(ResetPassDto resetPasswordDto)
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPassDto resetPasswordDto)
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
 

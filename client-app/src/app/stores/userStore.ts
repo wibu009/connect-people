@@ -44,6 +44,20 @@ export default class UserStore {
         }
     }
 
+    forgotPassword = async (email: string) => {
+        try {
+            await agent.Account.sendEmailResetPassword(email);
+            router.navigate('/account/forgotPassword?email=' + email);
+            store.modalStore.closeModal();
+        } catch (error: any) {
+            if(error?.response?.status === 400) {
+                throw error;
+            }
+            store.modalStore.closeModal();
+            console.log(500);
+        }
+    }
+
     logout = async () => {
         this.stopRefreshTokenTimer();
         store.commonStore.setToken(null);

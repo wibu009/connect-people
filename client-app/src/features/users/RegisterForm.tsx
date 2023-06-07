@@ -21,7 +21,7 @@ export default observer(function RegisterForm() {
             })}
         >
             {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
-                <Form className='ui form error' onSubmit={handleSubmit} autoComplete='off' >
+                <Form className='ui form error' onSubmit={handleSubmit}>
                     <Header as='h2' color='teal'>
                         <Image src='/assets/logo_teal.png' /> Join the Community
                     </Header>
