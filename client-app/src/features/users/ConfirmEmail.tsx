@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useStore } from "../../app/stores/store";
 import useQuery from "../../app/util/hook";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
 import { Button, Header, Icon, Segment } from "semantic-ui-react";
-import LoginForm from "./LoginForm";
+import { router } from "../../app/router/Routes";
 
 export default function ConfirmEmail() {
-    const {modalStore} = useStore();
     const email = useQuery().get("email") as string;
     const token = useQuery().get("token") as string;
 
@@ -43,14 +41,14 @@ export default function ConfirmEmail() {
                 return (
                     <div>
                         <p>Verification failed. You can try resending the verify link yo your email address.</p>
-                        <Button primary onClick={handleConfirmEmailResend} size='huge' content='Resend email' />
+                        <Button basic color='teal' onClick={handleConfirmEmailResend} size='huge' content='Resend email' />
                     </div>
                 );
             case Status.Success:
                 return (
                     <div>
                         <p>Email verified successfully! - you can now close this window</p>
-                        <Button primary onClick={() => modalStore.openModal(<LoginForm />)} size='huge' content='Login' />
+                        <Button basic color='teal' onClick={() => router.navigate("/")} size='huge' content='Go to Login' />
                     </div>
                 );
         }

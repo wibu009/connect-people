@@ -12,11 +12,11 @@ export default observer(function LoginForm() {
 
     return (
         <Formik
-            initialValues={{ email: '', password: '', error: null }}
+            initialValues={{ userName: '', password: '', error: null }}
             onSubmit={(values, { setErrors }) => userStore.login(values).catch(error => setErrors({ error: error.response.data }))}
             validationSchema={Yup.object({
-                email: Yup.string().required().email(),
-                password: Yup.string().required()
+                userName: Yup.string().required("Username is required"),
+                password: Yup.string().required("Password is required")
             })}
         >
             {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
@@ -24,7 +24,7 @@ export default observer(function LoginForm() {
                     <Header as='h2' color='teal' fluid='true' >
                         <Image src='/assets/logo_teal.png' /> Connect People Now
                     </Header>
-                    <MyTextInput fluid icon='user' iconPosition='left' placeholder="Email" name='email' />
+                    <MyTextInput fluid icon='user' iconPosition='left' placeholder="Email" name='userName' />
                     <MyTextInput fluid icon='lock' iconPosition='left' placeholder="Password" name='password' type="password" />
                     <ErrorMessage name="error" render={() => <Label style={{ marginBottom: 10, border: 'none' }} basic color='red' content={errors.error} />} />
                     <Button disabled={!isValid || !dirty || isSubmitting} loading={isSubmitting} positive content='Login' type='submit' fluid ></Button>

@@ -44,23 +44,22 @@ namespace API.Controllers
         {
             var user = await _userManager.Users
                 .Include(p => p.Photos)
-                .SingleOrDefaultAsync(x => x.Email == loginDto.Email);
+                .SingleOrDefaultAsync(x => x.Email == loginDto.UserName || x.UserName == loginDto.UserName);
 
-            if (user == null) return Unauthorized("Email or password is incorrect");
+            if (user == null) return Unauthorized("Username or password is incorrect");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (result.Succeeded)
             {
-                if(!user.EmailConfirmed) return Unauthorized("Email not confirmed");
+                if(!user.EmailConfirmed) return Unauthorized("Account is not confirmed");
 
                 await SetRefreshToken(user);
                 return CreateUserObject(user);
             }
 
-            return Unauthorized("Email or password is incorrect");
+            return Unauthorized("Username or password is incorrect");
         }
-
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -88,7 +87,7 @@ namespace API.Controllers
 
             if (!result.Succeeded) return BadRequest("Problem registering user");
 
-            var origin = Request.Headers["origin"];
+            var origin = Request.Headers["client-origin"];
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
@@ -120,6 +119,7 @@ namespace API.Controllers
             return Ok("Email confirmed");
         }
 
+
         [AllowAnonymous]
         [HttpGet("resendEmailConfirmationLink")]
         public async Task<ActionResult> ResendEmailConfirmationLink(string email)
@@ -130,7 +130,7 @@ namespace API.Controllers
 
             if (user.EmailConfirmed) return Ok("Email already confirmed");
 
-            var origin = Request.Headers["origin"];
+            var origin = Request.Headers["client-origin"];
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
@@ -153,7 +153,7 @@ namespace API.Controllers
 
             if (!user.EmailConfirmed) return Unauthorized("Account not verified");
 
-            var origin = Request.Headers["origin"];
+            var origin = Request.Headers["client-origin"];
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 

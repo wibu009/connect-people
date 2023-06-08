@@ -23,8 +23,12 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 axios.interceptors.request.use(config => {
     // Get the token from the store.
     const token = store.commonStore.token;
+    // Get the original request.
+    const originalRequest = new URL(window.location.href).origin;
     // If the token exists and the request has a headers object, add the token to the Authorization header.
     if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
+    // add origin header
+    if (originalRequest && config.headers) config.headers['client-origin'] = originalRequest;
     // Return the updated configuration.
     return config;
 })
