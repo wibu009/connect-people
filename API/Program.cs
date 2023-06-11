@@ -39,6 +39,12 @@ app.UseCsp(opt => opt
     .ScriptSources(s => s.Self().CustomSources("https://connect.facebook.net", "sha256-FDyPg8CqqIpPAfGVKx1YeKduyLs0ghNYWII21wL+7HM="))
 );
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+    await next();
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
