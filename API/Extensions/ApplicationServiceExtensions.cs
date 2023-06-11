@@ -95,7 +95,7 @@ namespace API.Extensions
                     .AllowAnyHeader()
                     .AllowCredentials()
                     .WithExposedHeaders("WWW-Authenticate", "Pagination")
-                    .WithOrigins(config.GetSection("Cors:AllowedOrigins").Get<string[]>());
+                    .WithOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost:5000", "https://localhost:5000", "https://connect-people.fly.dev");
                 });
             });
 
