@@ -23,7 +23,6 @@ export default class CommentStore {
 
             this.hubConnection
                 .start()
-                .then(() => console.log(this.hubConnection?.state.toString()))
                 .catch((error: any) => console.log('Error establishing connection: ', error));
 
             this.hubConnection.on('LoadComments', (comments: ChatComment[]) => {
@@ -46,7 +45,6 @@ export default class CommentStore {
 
     stopHubConnection = () => {
         this.hubConnection?.stop()
-            .then(() => console.log(this.hubConnection?.state.toString()))
             .catch((error: any) => console.log('Error stopping connection: ', error));
     }
 
